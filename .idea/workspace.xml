@@ -79,7 +79,7 @@
       <file leaf-file-name="graph_controller.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controller/graph/graph_controller.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5430">
+            <state relative-caret-position="-4815">
               <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
               <folding>
                 <element signature="e#15#540#0" expanded="true" />
@@ -799,7 +799,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controller/graph/graph_controller.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5430">
+        <state relative-caret-position="-4815">
           <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
           <folding>
             <element signature="e#15#540#0" expanded="true" />

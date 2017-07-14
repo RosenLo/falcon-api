@@ -32,6 +32,7 @@ func EndpointObjGet(c *gin.Context) {
 	inputs := APIEndpointObjGetInputs{
 		Deadline: 0,
 	}
+	log.Println("inputs:" + inputs)
 	if err := c.Bind(&inputs); err != nil {
 		h.JSONR(c, badstatus, err)
 		return
@@ -45,6 +46,8 @@ func EndpointObjGet(c *gin.Context) {
 	dt := db.Graph.Table("endpoint").
 		Where("endpoint in (?) and ts >= ?", inputs.Endpoints, inputs.Deadline).
 		Scan(&result)
+
+	log.Println("dt:==" + dt)
 	if dt.Error != nil {
 		h.JSONR(c, http.StatusBadRequest, dt.Error)
 		return
@@ -55,7 +58,10 @@ func EndpointObjGet(c *gin.Context) {
 		endpoints = append(endpoints, map[string]interface{}{"id": r.ID, "endpoint": r.Endpoint, "ts": r.Ts})
 	}
 
+	log.Println("result,end==>" + result + endpoints)
+	log.Println("c===?" *c)
 	h.JSONR(c, endpoints)
+
 }
 
 type APIEndpointRegexpQueryInputs struct {
