@@ -5,6 +5,7 @@ import "time"
 type Endpoint struct {
 	ID               uint              `gorm:"primary_key"`
 	Endpoint         string            `json:"endpoint"`
+	IP		 string		   `json:"ip"`
 	Ts               int               `json:"-"`
 	TCreate          time.Time         `json:"-"`
 	TModify          time.Time         `json:"-"`

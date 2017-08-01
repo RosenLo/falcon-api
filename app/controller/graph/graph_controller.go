@@ -17,10 +17,11 @@ import (
 	grh "github.com/open-falcon/falcon-plus/modules/api/graph"
 	tcache "github.com/toolkits/cache/localcache/timedcache"
 	"net/http"
+	//"github.com/open-falcon/falcon-plus/modules/api/app/controller/host"
 )
 
 var (
-	localStepCache = tcache.New(600*time.Second, 60*time.Second)
+	localStepCache = tcache.New(600 * time.Second, 60 * time.Second)
 )
 
 type APIEndpointObjGetInputs struct {
@@ -84,11 +85,13 @@ func EndpointRegexpQuery(c *gin.Context) {
 
 	labels := []string{}
 	if inputs.Label != "" {
+		//判断tags是否为空
 		labels = strings.Split(inputs.Label, ",")
 	}
 	qs := []string{}
 	if inputs.Q != "" {
-		qs = strings.Split(inputs.Q, " ")
+		//解析输入的hostname(再次改动支持ip)
+		qs = strings.Split(inputs.Q, " ")                //输入解析为一个数组
 	}
 
 	var offset int = 0
@@ -98,11 +101,13 @@ func EndpointRegexpQuery(c *gin.Context) {
 
 	var endpoint []m.Endpoint
 	var endpoint_id []int
-	var dt *gorm.DB
+	var dt,it *gorm.DB
+
+	endpoints := []map[string]interface{}{}
 	if len(labels) != 0 {
 		dt = db.Graph.Table("endpoint_counter").Select("distinct endpoint_id")
 		for _, trem := range labels {
-			dt = dt.Where(" counter like ? ", "%"+strings.TrimSpace(trem)+"%")
+			dt = dt.Where(" counter like ? ", "%" + strings.TrimSpace(trem) + "%")
 		}
 		dt = dt.Limit(inputs.Limit).Offset(offset).Pluck("distinct endpoint_id", &endpoint_id)
 		if dt.Error != nil {
@@ -111,13 +116,37 @@ func EndpointRegexpQuery(c *gin.Context) {
 		}
 	}
 	if len(qs) != 0 {
+		//增加ip的查询
+		it = db.Falcon.Table("host").Select("ip, id")
+		for _, ss := range qs{
+			log.Println(ss)
+			it = it.Where(" ip regexp ? ", strings.TrimSpace(ss))
+		}
+
+		it.Limit(inputs.Limit).Offset(offset).Scan(&endpoint)
+		log.Println(endpoint)
+
+		for _, k := range endpoint {
+			endpoints = append(endpoints, map[string]interface{}{"id": k.ID, "endpoint": k.IP})
+		}
+		log.Println("-------->")
+		log.Println(endpoints)
+		//
+
+
+
+
 		dt = db.Graph.Table("endpoint").
 			Select("endpoint, id")
+
 		if len(endpoint_id) != 0 {
 			dt = dt.Where("id in (?)", endpoint_id)
 		}
 
 		for _, trem := range qs {
+			log.Println("trem------>")
+			log.Println(trem)
+			//遍历查询的输入
 			dt = dt.Where(" endpoint regexp ? ", strings.TrimSpace(trem))
 		}
 		dt.Limit(inputs.Limit).Offset(offset).Scan(&endpoint)
@@ -127,16 +156,20 @@ func EndpointRegexpQuery(c *gin.Context) {
 			Where("id in (?)", endpoint_id).
 			Scan(&endpoint)
 	}
+	if it.Error != nil {
+		h.JSONR(c, http.StatusBadRequest, it.Error)
+		return
+	}
 	if dt.Error != nil {
 		h.JSONR(c, http.StatusBadRequest, dt.Error)
 		return
 	}
 
-	endpoints := []map[string]interface{}{}
+	//endpoints := []map[string]interface{}{}
 	for _, e := range endpoint {
 		endpoints = append(endpoints, map[string]interface{}{"id": e.ID, "endpoint": e.Endpoint})
 	}
-
+	log.Println(endpoints)
 	h.JSONR(c, endpoints)
 }
 
@@ -171,6 +204,22 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 		}
 
 		var counters []m.EndpointCounter
+
+		//lee
+		//ip先转换为endpoint表中的hostname再查找
+		it := db.Graph.Raw("select endpoint_id,counter,step,type from endpoint_counter Where (endpoint_id IN (select id from endpoint where endpoint in (select hostname from falcon_portal.host where id in (?)))", eids)
+		if metricQuery != "" {
+			qs := strings.Split(metricQuery, " ")
+			if len(qs) > 0 {
+				for _, kk := range qs {
+					it = it.Where("counter regexp ?)", strings.TrimSpace(kk))
+				}
+			}
+		}
+		it = it.Limit(limit).Offset(offset).Scan(&counters)
+		//lee
+
+		//先按照endpoint_id查找counters,如果没有则先找到ip对应的endpoint_id再查找
 		dt := db.Graph.Table("endpoint_counter").Select("endpoint_id, counter, step, type").Where(fmt.Sprintf("endpoint_id IN %s", eids))
 		if metricQuery != "" {
 			qs := strings.Split(metricQuery, " ")
@@ -184,6 +233,10 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 		if dt.Error != nil {
 			h.JSONR(c, http.StatusBadRequest, dt.Error)
 			return
+		}
+
+		if it.Error != nil {
+			h.JSONR(c, http.StatusBadRequest, it.Error)
 		}
 
 		countersResp := []interface{}{}
