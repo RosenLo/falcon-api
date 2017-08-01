@@ -204,6 +204,7 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 		}
 
 		var counters []m.EndpointCounter
+		countersResp := []interface{}{}
 
 		//lee
 		//ip先转换为endpoint表中的hostname再查找
@@ -217,6 +218,17 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 			}
 		}
 		it = it.Limit(limit).Offset(offset).Scan(&counters)
+		if it.Error != nil {
+			h.JSONR(c, http.StatusBadRequest, it.Error)
+		}
+		for _, x := range counters {
+			countersResp = append(countersResp, map[string]interface{}{
+				"endpoint_id": x.EndpointID,
+				"counter":     x.Counter,
+				"step":        x.Step,
+				"type":        x.Type,
+			})
+		}
 		//lee
 
 		//先按照endpoint_id查找counters,如果没有则先找到ip对应的endpoint_id再查找
@@ -235,11 +247,7 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 			return
 		}
 
-		if it.Error != nil {
-			h.JSONR(c, http.StatusBadRequest, it.Error)
-		}
-
-		countersResp := []interface{}{}
+		//countersResp := []interface{}{}
 		for _, c := range counters {
 			countersResp = append(countersResp, map[string]interface{}{
 				"endpoint_id": c.EndpointID,
