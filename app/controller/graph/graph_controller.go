@@ -508,10 +508,30 @@ func getCounterStep(endpoint, counter string) (step int, err error) {
 		err = dt.Error
 		return
 	}
+
+	log.Println("-----judge len(dt)")
+	log.Println(len(rows))
+	//if len(rows) == 0 {
+	//	log.Println("row is 0")
+	//	err = errors.New("empty result")
+	//	return
+	//}
 	if len(rows) == 0 {
+		it := db.Graph.Raw(`select a.step from endpoint_counter as a, endpoint as b
+		where b.endpoint = (select hostname from falcon_portal.host where ip = ?) and a.endpoint_id = b.id and a.counter = ? limit 1`, endpoint, counter).Scan(&rows)
+		if it.Error != nil{
+			err = it.Error
+			return
+		}
+	}
+	log.Println("rows---->")
+	log.Println(rows)
+	if len(rows) == 0 {
+		log.Println("row is 0")
 		err = errors.New("empty result")
 		return
 	}
+
 	step = rows[0]
 	localStepCache.Set(cache_key, step, tcache.DefaultExpiration)
 

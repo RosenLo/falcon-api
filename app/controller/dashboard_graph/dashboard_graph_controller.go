@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"log"
 )
 
 type APITmpGraphCreateReqData struct {
@@ -31,6 +32,11 @@ func DashboardTmpGraphCreate(c *gin.Context) {
 	es_string := strings.Join(es, TMP_GRAPH_FILED_DELIMITER)
 	cs_string := strings.Join(cs, TMP_GRAPH_FILED_DELIMITER)
 	ck := cutils.Md5(es_string + ":" + cs_string)
+
+	log.Println("chart------------>da")
+	log.Println(es_string)
+	log.Println(cs_string)
+	log.Println(ck)
 
 	dt := db.Dashboard.Exec("insert ignore into `tmp_graph` (endpoints, counters, ck) values(?, ?, ?) on duplicate key update time_=?", es_string, cs_string, ck, time.Now())
 	if dt.Error != nil {
