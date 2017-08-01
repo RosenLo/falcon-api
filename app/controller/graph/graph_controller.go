@@ -207,7 +207,7 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 
 		//lee
 		//ip先转换为endpoint表中的hostname再查找
-		it := db.Graph.Raw("select endpoint_id,counter,step,type from endpoint_counter Where (endpoint_id IN (select id from endpoint where endpoint in (select hostname from falcon_portal.host where id in (?)))", eids)
+		it := db.Graph.Raw(fmt.Sprintf("select endpoint_id,counter,step,type from endpoint_counter Where endpoint_id IN (select id from endpoint where endpoint in (select hostname from falcon_portal.host where id in %s )", eids))
 		if metricQuery != "" {
 			qs := strings.Split(metricQuery, " ")
 			if len(qs) > 0 {
