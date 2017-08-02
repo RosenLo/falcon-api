@@ -19,6 +19,7 @@ import (
 	"net/http"
 	//"github.com/open-falcon/falcon-plus/modules/api/app/controller/host"
 	"reflect"
+	"database/sql"
 )
 
 var (
@@ -280,24 +281,23 @@ type APIQueryGraphDrawData struct {
 	Step      int      `json:"step"`
 }
 
-type IdentifyIp struct {
-	Ip string
-}
-
-func chip_host (host string) (real_host string, err error){
-	var ips IdentifyIp
-	dt := db.Falcon.Table("host").Select("hostname").Where("ip = ?", host).First(&ips)
-	if dt.Error != nil {
-		fmt.Println(dt.Error)
-		return
+func Chip_host(host string) (real_host string) {
+	var hostname string
+	db, err := sql.Open("mysql",
+		"root:Li26yanxi8@tcp(192.168.1.250:3308)/falcon_portal?charset=utf8&parseTime=True&loc=Local")
+	if err != nil {
+		log.Fatal(err)
 	}
-	log.Println(dt)
-	log.Println(ips)
-	log.Println(ips.Ip)
-	real_host = ips.Ip
 
+	err = db.QueryRow("select hostname from falcon_portal.host where ip = ?", host).Scan(&hostname)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(hostname)
+	real_host = hostname
 	return
 }
+
 func QueryGraphDrawData(c *gin.Context) {
 	var inputs APIQueryGraphDrawData
 	var err error
@@ -313,24 +313,20 @@ func QueryGraphDrawData(c *gin.Context) {
 
 		dotnum := strings.Count(host, ".")
 		log.Println(dotnum)
-		//var ipaddr string
-		//ipaddr, err = getipaddr(host)
-
 		if err != nil {
 			log.Println(err)
 		}
-		//log.Println("ipaddr")
-		//log.Println(getipaddr(host))
 		for _, counter := range inputs.Counters {
 			var step int
-			if inputs.Step > 0 {
-				step = inputs.Step
-			} else {
-				step, err = getCounterStep(host, counter)
-				if err != nil {
-					continue
-				}
-			}
+			//if inputs.Step > 0 {
+			//	step = inputs.Step
+			//} else {
+			//	step, err = getCounterStep(host, counter)
+			//	if err != nil {
+			//		continue
+			//	}
+			//}
+			step = 60
 			if dotnum != 3 {
 				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
@@ -338,23 +334,15 @@ func QueryGraphDrawData(c *gin.Context) {
 
 			if dotnum == 3 {
 				log.Println("走这里-------")
-				host, err := chip_host(host)
-				log.Println(host)
-				if err != nil{
-					continue
-				}
+				host := Chip_host(host)
+
 				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
 				log.Println(data)
 
-				}
 			}
-			//data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
-			//log.Println("data------------------->")
-			//log.Println(reflect.TypeOf(data))
-			//log.Println(*data)
-			//respData = append(respData, data)
 		}
+	}
 
 	h.JSONR(c, respData)
 }
