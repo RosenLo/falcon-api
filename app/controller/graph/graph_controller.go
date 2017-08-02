@@ -290,6 +290,7 @@ func Chip_host(host string) (real_host string) {
 	}
 
 	err = db.QueryRow("select hostname from falcon_portal.host where ip = ?", host).Scan(&hostname)
+	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -318,15 +319,14 @@ func QueryGraphDrawData(c *gin.Context) {
 		}
 		for _, counter := range inputs.Counters {
 			var step int
-			//if inputs.Step > 0 {
-			//	step = inputs.Step
-			//} else {
-			//	step, err = getCounterStep(host, counter)
-			//	if err != nil {
-			//		continue
-			//	}
-			//}
-			step = 60
+			if inputs.Step > 0 {
+				step = inputs.Step
+			} else {
+				step, err = getCounterStep(host, counter)
+				if err != nil {
+					continue
+				}
+			}
 			if dotnum != 3 {
 				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
