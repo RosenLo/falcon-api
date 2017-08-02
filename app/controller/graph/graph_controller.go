@@ -102,7 +102,7 @@ func EndpointRegexpQuery(c *gin.Context) {
 
 	var endpoint []m.Endpoint
 	var endpoint_id []int
-	var dt,it *gorm.DB
+	var dt, it *gorm.DB
 
 	endpoints := []map[string]interface{}{}
 	if len(labels) != 0 {
@@ -119,7 +119,7 @@ func EndpointRegexpQuery(c *gin.Context) {
 	if len(qs) != 0 {
 		//增加ip的查询
 		it = db.Falcon.Table("host").Select("ip, id")
-		for _, ss := range qs{
+		for _, ss := range qs {
 			log.Println(ss)
 			it = it.Where(" ip regexp ? ", strings.TrimSpace(ss))
 		}
@@ -133,8 +133,6 @@ func EndpointRegexpQuery(c *gin.Context) {
 		log.Println("-------->")
 		log.Println(endpoints)
 		//
-
-
 
 
 		dt = db.Graph.Table("endpoint").
@@ -221,11 +219,11 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 			}
 			if len(qs) > 0 {
 				qslen := len(qs)
-				for _, kk := range qs[:qslen-1] {
+				for _, kk := range qs[:qslen - 1] {
 					it = it.Where(`counter regexp ?`, strings.TrimSpace(kk))
 				}
 
-				mm := strings.TrimSpace(qs[qslen-1])
+				mm := strings.TrimSpace(qs[qslen - 1])
 				it = it.Where(`counter regexp ?)`, strings.TrimSpace(mm))
 			}
 		}
@@ -286,16 +284,17 @@ type IdentifyIp struct {
 	Ip string
 }
 
-//func getipaddr(host string) {
-//	var ips IdentifyIp
-//	dt := db.Falcon.Table("host").Select("hostname").Where("ip = ?", host).First(&ips)
-//	if dt.Error != nil{
-//		return
-//	}
-//	log.Println("dt---->")
-//	log.Println(dt)
-//}
+func chip_host (host string) (real_host string, err error){
+	var ips IdentifyIp
+	dt := db.Falcon.Table("host").Select("hostname").Where("ip = ?", host).First(&ips)
+	if dt.Error != nil {
+		fmt.Println(dt.Error)
+		return
+	}
+	real_host = ips.Ip
 
+	return
+}
 func QueryGraphDrawData(c *gin.Context) {
 	var inputs APIQueryGraphDrawData
 	var err error
@@ -305,10 +304,16 @@ func QueryGraphDrawData(c *gin.Context) {
 	}
 	respData := []*cmodel.GraphQueryResponse{}
 	for _, host := range inputs.HostNames {
+		log.Println("host------------------------>")
+		log.Println(host)
+		log.Println(reflect.TypeOf(host))
+
+		dotnum := strings.Count(host, ".")
+		log.Println(dotnum)
 		//var ipaddr string
 		//ipaddr, err = getipaddr(host)
 
-		if err != nil{
+		if err != nil {
 			log.Println(err)
 		}
 		//log.Println("ipaddr")
@@ -323,13 +328,31 @@ func QueryGraphDrawData(c *gin.Context) {
 					continue
 				}
 			}
-			data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
-			log.Println("data------------------->")
-			log.Println(reflect.TypeOf(data))
-			log.Println(*data)
-			respData = append(respData, data)
+			if dotnum != 3 {
+				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
+				respData = append(respData, data)
+			}
+
+			if dotnum == 3 {
+				log.Println("走这里-------")
+				host, err := chip_host(host)
+				log.Println(host)
+				if err != nil{
+					continue
+				}
+				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
+				respData = append(respData, data)
+				log.Println(data)
+
+				}
+			}
+			//data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
+			//log.Println("data------------------->")
+			//log.Println(reflect.TypeOf(data))
+			//log.Println(*data)
+			//respData = append(respData, data)
 		}
-	}
+
 	h.JSONR(c, respData)
 }
 
@@ -556,7 +579,7 @@ func getCounterStep(endpoint, counter string) (step int, err error) {
 	if len(rows) == 0 {
 		it := db.Graph.Raw(`select a.step from endpoint_counter as a, endpoint as b
 		where b.endpoint = (select hostname from falcon_portal.host where ip = ?) and a.endpoint_id = b.id and a.counter = ? limit 1`, endpoint, counter).Scan(&rows)
-		if it.Error != nil{
+		if it.Error != nil {
 			err = it.Error
 			return
 		}
