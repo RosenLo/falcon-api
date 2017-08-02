@@ -18,6 +18,7 @@ import (
 	tcache "github.com/toolkits/cache/localcache/timedcache"
 	"net/http"
 	//"github.com/open-falcon/falcon-plus/modules/api/app/controller/host"
+	"reflect"
 )
 
 var (
@@ -209,12 +210,23 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 		//lee
 		//ip先转换为endpoint表中的hostname再查找
 		it := db.Graph.Raw(fmt.Sprintf("select endpoint_id,counter,step,type from endpoint_counter Where endpoint_id IN (select id from endpoint where endpoint in (select hostname from falcon_portal.host where id in %s )", eids))
+
 		if metricQuery != "" {
 			qs := strings.Split(metricQuery, " ")
-			if len(qs) > 0 {
+			log.Println(len(qs))
+			if len(qs) == 0 {
 				for _, kk := range qs {
-					it = it.Where("counter regexp ?)", strings.TrimSpace(kk))
+					it = it.Where(`counter regexp ?)`, strings.TrimSpace(kk))
 				}
+			}
+			if len(qs) > 0 {
+				qslen := len(qs)
+				for _, kk := range qs[:qslen-1] {
+					it = it.Where(`counter regexp ?`, strings.TrimSpace(kk))
+				}
+
+				mm := strings.TrimSpace(qs[qslen-1])
+				it = it.Where(`counter regexp ?)`, strings.TrimSpace(mm))
 			}
 		}
 		it = it.Limit(limit).Offset(offset).Scan(&counters)
@@ -270,6 +282,20 @@ type APIQueryGraphDrawData struct {
 	Step      int      `json:"step"`
 }
 
+type IdentifyIp struct {
+	Ip string
+}
+
+//func getipaddr(host string) {
+//	var ips IdentifyIp
+//	dt := db.Falcon.Table("host").Select("hostname").Where("ip = ?", host).First(&ips)
+//	if dt.Error != nil{
+//		return
+//	}
+//	log.Println("dt---->")
+//	log.Println(dt)
+//}
+
 func QueryGraphDrawData(c *gin.Context) {
 	var inputs APIQueryGraphDrawData
 	var err error
@@ -279,6 +305,14 @@ func QueryGraphDrawData(c *gin.Context) {
 	}
 	respData := []*cmodel.GraphQueryResponse{}
 	for _, host := range inputs.HostNames {
+		//var ipaddr string
+		//ipaddr, err = getipaddr(host)
+
+		if err != nil{
+			log.Println(err)
+		}
+		//log.Println("ipaddr")
+		//log.Println(getipaddr(host))
 		for _, counter := range inputs.Counters {
 			var step int
 			if inputs.Step > 0 {
@@ -290,6 +324,9 @@ func QueryGraphDrawData(c *gin.Context) {
 				}
 			}
 			data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
+			log.Println("data------------------->")
+			log.Println(reflect.TypeOf(data))
+			log.Println(*data)
 			respData = append(respData, data)
 		}
 	}
