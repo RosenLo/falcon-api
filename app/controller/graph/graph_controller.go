@@ -291,6 +291,9 @@ func chip_host (host string) (real_host string, err error){
 		fmt.Println(dt.Error)
 		return
 	}
+	log.Println(dt)
+	log.Println(ips)
+	log.Println(ips.Ip)
 	real_host = ips.Ip
 
 	return
