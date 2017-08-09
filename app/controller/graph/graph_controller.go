@@ -19,7 +19,7 @@ import (
 	"net/http"
 	//"github.com/open-falcon/falcon-plus/modules/api/app/controller/host"
 	"reflect"
-	"database/sql"
+	//"database/sql"
 )
 
 var (
@@ -281,22 +281,18 @@ type APIQueryGraphDrawData struct {
 	Step      int      `json:"step"`
 }
 
-func Chip_host(host string) (real_host string) {
-	var hostname string
-	db, err := sql.Open("mysql",
-		"root:Li26yanxi8@tcp(192.168.1.250:3308)/falcon_portal?charset=utf8&parseTime=True&loc=Local")
-	if err != nil {
-		log.Fatal(err)
+type Identify struct {
+	Host string
+}
+func Chip_host(host string) string {
+	hostname := Identify{}
+	log.Println("ip-------------------->")
+	it := db.Falcon.Raw(`select hostname from falcon_portal.host where ip = ?`, host).First(&hostname)
+	if it.Error != nil{
+		log.Println(it.Error)
 	}
-
-	err = db.QueryRow("select hostname from falcon_portal.host where ip = ?", host).Scan(&hostname)
-	defer db.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(hostname)
-	real_host = hostname
-	return
+	hostn := hostname.Host
+	return hostn
 }
 
 func QueryGraphDrawData(c *gin.Context) {
@@ -327,6 +323,7 @@ func QueryGraphDrawData(c *gin.Context) {
 					continue
 				}
 			}
+			//step = 60
 			if dotnum != 3 {
 				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
@@ -335,11 +332,9 @@ func QueryGraphDrawData(c *gin.Context) {
 			if dotnum == 3 {
 				log.Println("走这里-------")
 				host := Chip_host(host)
-
 				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
-				log.Println(data)
-
+				log.Println(respData)
 			}
 		}
 	}
