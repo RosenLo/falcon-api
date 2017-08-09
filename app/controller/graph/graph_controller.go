@@ -331,8 +331,9 @@ func QueryGraphDrawData(c *gin.Context) {
 
 			if dotnum == 3 {
 				log.Println("走这里-------")
-				host := Chip_host(host)
-				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
+				host1 := Chip_host(host)
+				log.Println(host1)
+				data, _ := fetchData(host1, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
 				log.Println(respData)
 			}
