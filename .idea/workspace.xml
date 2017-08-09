@@ -40,7 +40,7 @@
       <file leaf-file-name="dashboard_graph_controller.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controller/dashboard_graph/dashboard_graph_controller.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1695">
+            <state relative-caret-position="-1800">
               <caret line="113" column="28" selection-start-line="113" selection-start-column="28" selection-end-line="113" selection-end-column="28" />
               <folding>
                 <element signature="e#25#301#0" expanded="true" />
@@ -62,8 +62,8 @@
       <file leaf-file-name="graph_controller.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controller/graph/graph_controller.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="334" column="49" selection-start-line="334" selection-start-column="49" selection-end-line="334" selection-end-column="49" />
+            <state relative-caret-position="58">
+              <caret line="317" column="16" selection-start-line="317" selection-start-column="16" selection-end-line="324" selection-end-column="25" />
               <folding>
                 <element signature="e#15#641#0" expanded="true" />
               </folding>
@@ -742,9 +742,9 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329235" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329235" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.329235" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38387978" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38387978" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -775,7 +775,7 @@
           <line>2</line>
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="1" />
+      <option name="time" value="7" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1145,28 +1145,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cfg.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="126" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="126" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../jinzhu/gorm/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="266" column="13" selection-start-line="266" selection-start-column="13" selection-end-line="266" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/model/graph/endpoint.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="5" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
           <folding>
             <element signature="e#15#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/dashboard_graph/dashboard_graph_controller.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1800">
+          <caret line="113" column="28" selection-start-line="113" selection-start-column="28" selection-end-line="113" selection-end-column="28" />
+          <folding>
+            <element signature="e#25#301#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1179,20 +1173,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/controller/dashboard_graph/dashboard_graph_controller.go">
+    <entry file="file://$PROJECT_DIR$/cfg.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="28" selection-start-line="113" selection-start-column="28" selection-end-line="113" selection-end-column="28" />
-          <folding>
-            <element signature="e#25#301#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="45">
+          <caret line="3" column="126" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="126" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../jinzhu/gorm/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="266" column="13" selection-start-line="266" selection-start-column="13" selection-end-line="266" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controller/graph/graph_controller.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="334" column="49" selection-start-line="334" selection-start-column="49" selection-end-line="334" selection-end-column="49" />
+        <state relative-caret-position="58">
+          <caret line="317" column="16" selection-start-line="317" selection-start-column="16" selection-end-line="324" selection-end-column="25" />
           <folding>
             <element signature="e#15#641#0" expanded="true" />
           </folding>

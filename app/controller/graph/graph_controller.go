@@ -281,14 +281,14 @@ type APIQueryGraphDrawData struct {
 	Step      int      `json:"step"`
 }
 
-type Identify struct {
-	Host string
-}
 func Chip_host(host string) string {
-	hostname := Identify{}
+	type Identify struct {
+		Host string `gorm:"column:hostname"`
+	}
+	var hostname Identify
 	log.Println("ip-------------------->")
-	it := db.Falcon.Raw(`select hostname from falcon_portal.host where ip = ?`, host).First(&hostname)
-	if it.Error != nil{
+	it := db.Falcon.Raw(`select hostname from falcon_portal.host where ip = ? `, host).First(&hostname)
+	if it.Error != nil {
 		log.Println(it.Error)
 	}
 	hostn := hostname.Host
@@ -331,11 +331,11 @@ func QueryGraphDrawData(c *gin.Context) {
 
 			if dotnum == 3 {
 				log.Println("走这里-------")
-				host1 := Chip_host(host)
-				log.Println(host1)
-				data, _ := fetchData(host1, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
+				host := Chip_host(host)
+				log.Println("host---")
+				log.Println(host)
+				data, _ := fetchData(host, counter, inputs.ConsolFun, inputs.StartTime, inputs.EndTime, step)
 				respData = append(respData, data)
-				log.Println(respData)
 			}
 		}
 	}
