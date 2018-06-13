@@ -3,10 +3,11 @@ package alarm
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
 	alm "github.com/open-falcon/falcon-plus/modules/api/app/model/alarm"
-	"strings"
 )
 
 type APIGetAlarmListsInputs struct {
@@ -163,7 +164,7 @@ func EventsGet(c *gin.Context) {
 	//for get correct table name
 	f := alm.Events{}
 	evens := []alm.Events{}
-	if inputs.Limit == 0 || inputs.Limit >= 50 {
+	if inputs.Limit == 0 || inputs.Limit <= 50 {
 		inputs.Limit = 50
 	}
 	perparedSql := fmt.Sprintf("select id, event_caseId, cond, status, timestamp from %s %s order by timestamp DESC limit %d,%d", f.TableName(), filterCollector, inputs.Page, inputs.Limit)
