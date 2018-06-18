@@ -17,6 +17,7 @@ func Routes(r *gin.Engine) {
 	tmpr := r.Group("/api/v1/template")
 	tmpr.Use(utils.AuthSessionMidd)
 	tmpr.GET("", GetTemplates)
+	tmpr.GET("/name/:tpl_name", GetTemplateByName)
 	tmpr.POST("", CreateTemplate)
 	tmpr.GET("/:tpl_id", GetATemplate)
 	tmpr.PUT("", UpdateTemplate)

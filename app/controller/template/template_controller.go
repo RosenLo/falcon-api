@@ -2,6 +2,7 @@ package template
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	log "github.com/Sirupsen/logrus"
@@ -61,6 +62,21 @@ func GetTemplates(c *gin.Context) {
 		})
 	}
 	h.JSONR(c, output)
+	return
+}
+
+func GetTemplateByName(c *gin.Context) {
+	name := c.Params.ByName("tpl_name")
+	if name == "" {
+		h.JSONR(c, badstatus, "template name is missing")
+		return
+	}
+	ftpl := f.Template{}
+	if dt := db.Falcon.Where("tpl_name = ?", name).First(&ftpl); dt.Error != nil {
+		h.JSONR(c, http.StatusExpectationFailed, dt.Error)
+		return
+	}
+	h.JSONR(c, ftpl)
 	return
 }
 
@@ -150,7 +166,7 @@ func CreateTemplate(c *gin.Context) {
 		h.JSONR(c, badstatus, dt.Error)
 		return
 	}
-	h.JSONR(c, "template created")
+	h.JSONR(c, template)
 	return
 }
 
@@ -295,7 +311,8 @@ func CreateActionToTmplate(c *gin.Context) {
 	}
 	tx.Commit()
 	// db.Falcon.Commit()
-	h.JSONR(c, fmt.Sprintf("action is created and bind to template: %d", inputs.TplId))
+	// h.JSONR(c, fmt.Sprintf("action is created and bind to template: %d", inputs.TplId))
+	h.JSONR(c, action)
 	return
 }
 
