@@ -38,7 +38,7 @@ func GetTemplates(c *gin.Context) {
 	q := c.DefaultQuery("q", ".+")
 	if limit != -1 && page != -1 {
 		dt = db.Falcon.Raw(
-			fmt.Sprintf("SELECT * from tpl WHERE tpl_name regexp %s limit %d,%d", q, page, limit)).Scan(&templates)
+			fmt.Sprintf("SELECT * from tpl WHERE tpl_name regexp '%s' limit %d,%d", q, page, limit)).Scan(&templates)
 	} else {
 		dt = db.Falcon.Where("tpl_name regexp ?", q).Find(&templates)
 	}
