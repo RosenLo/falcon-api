@@ -45,4 +45,5 @@ func Routes(r *gin.Engine) {
 	//host
 	hostr.GET("/host/:host_id/template", GetTplsRelatedHost)
 	hostr.GET("/host/:host_id/hostgroup", GetGrpsRelatedHost)
+	hostr.GET("/hosts", GetHost)
 }

@@ -119,3 +119,24 @@ func GetTplsRelatedHost(c *gin.Context) {
 	h.JSONR(c, tpls)
 	return
 }
+
+func GetHost(c *gin.Context) {
+	hostName := c.DefaultQuery("hostname", "")
+	hostIp := c.DefaultQuery("ip", "")
+
+	hosts := []f.Host{}
+	if hostName == "" && hostIp == "" {
+		if dt := db.Falcon.Find(&hosts); dt.Error != nil {
+			h.JSONR(c, expecstatus, dt.Error)
+			return
+		}
+		h.JSONR(c, hosts)
+	}
+
+	if dt := db.Falcon.Where("ip = ? or name = ?", hostIp, hostName).Find(&hosts); dt.Error != nil {
+		h.JSONR(c, expecstatus, dt.Error)
+		return
+	}
+	h.JSONR(c, hosts)
+	return
+}
