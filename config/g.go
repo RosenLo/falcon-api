@@ -7,7 +7,9 @@ import (
 
 // change log:
 const (
-	VERSION = "0.0.1"
+	OFFICIAL_VERSION = "0.0.1"
+	DADA_VERSION     = "0.0.1"
+	VERSION          = DADA_VERSION
 )
 
 func init() {
