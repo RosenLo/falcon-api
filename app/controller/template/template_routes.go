@@ -17,7 +17,6 @@ func Routes(r *gin.Engine) {
 	tmpr := r.Group("/api/v1/template")
 	tmpr.Use(utils.AuthSessionMidd)
 	tmpr.GET("", GetTemplates)
-	tmpr.GET("/name/:tpl_name", GetTemplateByName)
 	tmpr.POST("", CreateTemplate)
 	tmpr.GET("/:tpl_id", GetATemplate)
 	tmpr.PUT("", UpdateTemplate)
@@ -30,6 +29,10 @@ func Routes(r *gin.Engine) {
 
 	//simple list for ajax use
 	tmpr2 := r.Group("/api/v1/template_simple")
-	tmpr.Use(utils.AuthSessionMidd)
+	tmpr2.Use(utils.AuthSessionMidd)
 	tmpr2.GET("", GetTemplatesSimple)
+
+	tmpr3 := r.Group("/api/v1/template_name")
+	tmpr3.Use(utils.AuthSessionMidd)
+	tmpr3.GET("/name/:tpl_name", GetTemplateByName)
 }
