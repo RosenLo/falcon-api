@@ -85,11 +85,6 @@ func BindHostToHostGroup(c *gin.Context) {
 		return
 	}
 	tx := db.Falcon.Begin()
-	if dt := tx.Where("grp_id = ?", hostgroup.ID).Delete(&f.GrpHost{}); dt.Error != nil {
-		h.JSONR(c, expecstatus, fmt.Sprintf("delete grp_host got error: %v", dt.Error))
-		dt.Rollback()
-		return
-	}
 	var ids []int64
 	for _, host := range inputs.Hosts {
 		ahost := f.Host{Hostname: host}
@@ -105,6 +100,10 @@ func BindHostToHostGroup(c *gin.Context) {
 			}
 			id = ahost.ID
 			ids = append(ids, id)
+		}
+		agroup := f.GrpHost{HostID: id, GrpID: hostgroup.ID}
+		if _, ok := agroup.Existing(); ok {
+			continue
 		}
 		if dt := tx.Debug().Create(&f.GrpHost{GrpID: hostgroup.ID, HostID: id}); dt.Error != nil {
 			h.JSONR(c, expecstatus, fmt.Sprintf("create grphost got error: %s , grp_id: %v, host_id: %v", dt.Error, hostgroup.ID, id))

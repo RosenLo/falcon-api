@@ -1,5 +1,9 @@
 package falcon_portal
 
+import (
+	con "github.com/open-falcon/falcon-plus/modules/api/config"
+)
+
 // +---------+------------------+------+-----+---------+-------+
 // | Field   | Type             | Null | Key | Default | Extra |
 // +---------+------------------+------+-----+---------+-------+
@@ -14,4 +18,15 @@ type GrpHost struct {
 
 func (this GrpHost) TableName() string {
 	return "grp_host"
+}
+
+func (this GrpHost) Existing() (int64, bool) {
+	db := con.Con()
+	grp := GrpHost{}
+	db.Falcon.Table(this.TableName()).Where("grp_id = ? and host_id = ?", this.GrpID, this.HostID).Scan(&grp)
+	if grp.HostID != 0 {
+		return grp.HostID, true
+	} else {
+		return 0, false
+	}
 }
