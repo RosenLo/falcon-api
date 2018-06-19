@@ -133,7 +133,7 @@ func GetHost(c *gin.Context) {
 		h.JSONR(c, hosts)
 	}
 
-	if dt := db.Falcon.Where("ip = ? or name = ?", hostIp, hostName).Find(&hosts); dt.Error != nil {
+	if dt := db.Falcon.Where("ip = ? or hostname = ?", hostIp, hostName).Find(&hosts); dt.Error != nil {
 		h.JSONR(c, expecstatus, dt.Error)
 		return
 	}
