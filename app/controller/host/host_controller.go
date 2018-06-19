@@ -130,13 +130,20 @@ func GetHost(c *gin.Context) {
 			h.JSONR(c, expecstatus, dt.Error)
 			return
 		}
-		h.JSONR(c, hosts)
+	}
+	if hostIp != "" {
+		if dt := db.Falcon.Where("ip = ?", hostIp).Find(&hosts); dt.Error != nil {
+			h.JSONR(c, expecstatus, dt.Error)
+			return
+		}
+	}
+	if hostName != "" {
+		if dt := db.Falcon.Where("hostname = ?", hostName).Find(&hosts); dt.Error != nil {
+			h.JSONR(c, expecstatus, dt.Error)
+			return
+		}
 	}
 
-	if dt := db.Falcon.Where("ip = ? or hostname = ?", hostIp, hostName).Find(&hosts); dt.Error != nil {
-		h.JSONR(c, expecstatus, dt.Error)
-		return
-	}
 	h.JSONR(c, hosts)
 	return
 }
