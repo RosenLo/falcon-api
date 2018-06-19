@@ -8,7 +8,7 @@ import (
 // change log:
 const (
 	OFFICIAL_VERSION = "0.0.1"
-	DADA_VERSION     = "0.1.1"
+	DADA_VERSION     = "0.1.2"
 	VERSION          = DADA_VERSION
 )
 

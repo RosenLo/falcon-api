@@ -1,5 +1,14 @@
 Changes
 
+## 0.1.2 (2018-06-19)
+
+## Changed
+- feature improvement, do not remove all hosts in the host group before adding
+  a host to the host group #bc01622d
+
+## Fixed
+- fix the value of result out of range #f6188a30
+- update the field names of host #4d49e29e
 
 ## 0.1.1 (2018-06-18)
 
