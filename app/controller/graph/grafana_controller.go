@@ -193,7 +193,7 @@ func responseCounterRegexp(regexpKey string) (result []APIGrafanaMainQueryOutput
 
 func GrafanaMainQuery(c *gin.Context) {
 	inputs := APIGrafanaMainQueryInputs{}
-	inputs.Limit = 1000
+	inputs.Limit = 10000
 	inputs.Query = "!N!"
 	if err := c.Bind(&inputs); err != nil {
 		h.JSONR(c, badstatus, err.Error())
