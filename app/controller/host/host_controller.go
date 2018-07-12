@@ -11,6 +11,11 @@ import (
 	u "github.com/open-falcon/falcon-plus/modules/api/app/utils"
 )
 
+type APIMaintainInput struct {
+	MaintainBegin uint64 `json:"maintain_begin"`
+	MaintainEnd   uint64 `json:"maintain_end"`
+}
+
 func GetHostBindToWhichHostGroup(c *gin.Context) {
 	HostIdTmp := c.Params.ByName("host_id")
 	if HostIdTmp == "" {
@@ -124,7 +129,7 @@ func GetHost(c *gin.Context) {
 	hostName := c.DefaultQuery("hostname", "")
 	hostIp := c.DefaultQuery("ip", "")
 
-	hosts := []f.Host{}
+	var hosts []f.Host
 	if hostName == "" && hostIp == "" {
 		if dt := db.Falcon.Find(&hosts); dt.Error != nil {
 			h.JSONR(c, expecstatus, dt.Error)
@@ -144,6 +149,91 @@ func GetHost(c *gin.Context) {
 		}
 	}
 
+	h.JSONR(c, hosts)
+	return
+}
+
+func MaintainHost(c *gin.Context) {
+	var cmaint APIMaintainInput
+	err := c.Bind(&cmaint)
+	if err != nil {
+		h.JSONR(c, badstatus, err)
+		return
+	}
+
+	hostIDtmp := c.Params.ByName("host_id")
+	if hostIDtmp == "" {
+		h.JSONR(c, badstatus, "host id is missing")
+		return
+	}
+
+	hostID, err := strconv.Atoi(hostIDtmp)
+	if err != nil {
+		log.Debugf("host id: %v", hostIDtmp)
+		h.JSONR(c, badstatus, err)
+		return
+	}
+
+	host := f.Host{ID: int64(hostID)}
+	if _, ok := host.Existing(); !ok {
+		h.JSONR(c, badstatus, err)
+		return
+	}
+	hhost := map[string]interface{}{
+		"maintain_begin": cmaint.MaintainBegin,
+		"maintain_end":   cmaint.MaintainEnd,
+	}
+	if dt := db.Falcon.Model(&host).Where("id = ?", host.ID).Updates(hhost).Find(&host); dt.Error != nil {
+		h.JSONR(c, expecstatus, dt.Error)
+		return
+	}
+	h.JSONR(c, host)
+	return
+}
+
+func DeleteHost(c *gin.Context) {
+	hostIDTmp := c.Params.ByName("host_id")
+	if hostIDTmp == "" {
+		h.JSONR(c, badstatus, "host id is missing")
+		return
+	}
+	hostID, err := strconv.Atoi(hostIDTmp)
+	if err != nil {
+		log.Debugf("hostIDTmp: %v", hostIDTmp)
+		h.JSONR(c, badstatus, err)
+		return
+	}
+	host := f.Host{ID: int64(hostID)}
+	if dt := db.Falcon.Find(&host); dt.Error != nil {
+		h.JSONR(c, expecstatus, dt.Error)
+		return
+	}
+	user, _ := h.GetUser(c)
+	if !user.IsAdmin() {
+		return
+	}
+
+	if dt := db.Falcon.Delete(&host); dt.Error != nil {
+		h.JSONR(c, expecstatus, dt.Error)
+		return
+	}
+	h.JSONR(c, fmt.Sprintf("host :%v has been deleted", hostID))
+	return
+
+}
+
+func GetHostAlone(c *gin.Context) {
+	var hosts []f.Host
+	var grpHost []f.GrpHost
+	var hostIds []int64
+	db.Falcon.Select("DISTINCT(host_id)").Find(&grpHost)
+	for _, host := range grpHost {
+		hostIds = append(hostIds, host.HostID)
+	}
+	if dt := db.Falcon.Not("id", hostIds).Find(&hosts); dt.Error != nil {
+		h.JSONR(c, expecstatus, dt.Error)
+		return
+	}
 	h.JSONR(c, hosts)
 	return
 }
