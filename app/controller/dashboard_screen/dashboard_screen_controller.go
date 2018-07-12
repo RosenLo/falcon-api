@@ -2,10 +2,11 @@ package dashboard_screen
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
 	m "github.com/open-falcon/falcon-plus/modules/api/app/model/dashboard"
-	"strconv"
 )
 
 func ScreenCreate(c *gin.Context) {
@@ -54,6 +55,23 @@ func ScreenGet(c *gin.Context) {
 
 	screen := m.DashboardScreen{}
 	dt := db.Dashboard.Table("dashboard_screen").Where("id = ?", sid).First(&screen)
+	if dt.Error != nil {
+		h.JSONR(c, badstatus, dt.Error)
+		return
+	}
+
+	h.JSONR(c, screen)
+}
+
+func ScreenGetByName(c *gin.Context) {
+	name := c.Param("screen_name")
+	if name == "" {
+		h.JSONR(c, badstatus, "invalid screen screen name")
+		return
+	}
+
+	screen := m.DashboardScreen{}
+	dt := db.Dashboard.Table("dashboard_screen").Where("name = ?", name).First(&screen)
 	if dt.Error != nil {
 		h.JSONR(c, badstatus, dt.Error)
 		return

@@ -19,6 +19,7 @@ func Routes(r *gin.Engine) {
 	authapi.Use(utils.AuthSessionMidd)
 	authapi.POST("/screen", ScreenCreate)
 	authapi.GET("/screen/:screen_id", ScreenGet)
+	authapi.GET("/screen_name/:screen_name", ScreenGetByName)
 	authapi.GET("/screens/pid/:pid", ScreenGetsByPid)
 	authapi.GET("/screens", ScreenGetsAll)
 	authapi.DELETE("/screen/:screen_id", ScreenDelete)
