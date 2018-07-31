@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/viper"
 	connp "github.com/toolkits/conn_pool"
 	rpcpool "github.com/toolkits/conn_pool/rpc_conn_pool"
-	rings "github.com/toolkits/consistent/rings"
+	"github.com/toolkits/consistent/rings"
 	nset "github.com/toolkits/container/set"
 )
 
