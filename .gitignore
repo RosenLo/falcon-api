@@ -1,0 +1,15 @@
+*.log
+*.o
+*.so
+*.swp
+*.swo
+/falcon-hbs*
+/hbs*
+/log
+/var
+/tmp
+/gitversion
+falcon-api
+.idea/
+.DS_Store
+cfg.json
