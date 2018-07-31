@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
 	f "github.com/open-falcon/falcon-plus/modules/api/app/model/falcon_portal"
+	"github.com/open-falcon/falcon-plus/modules/api/app/services/hbs"
 	u "github.com/open-falcon/falcon-plus/modules/api/app/utils"
 )
 
@@ -235,5 +236,26 @@ func GetHostAlone(c *gin.Context) {
 		return
 	}
 	h.JSONR(c, hosts)
+	return
+}
+
+func GetHostStrategies(c *gin.Context) {
+	hostIDtmp := c.Params.ByName("host_id")
+	if hostIDtmp == "" {
+		h.JSONR(c, badstatus, "host id is missing")
+		return
+	}
+	hostID, err := strconv.Atoi(hostIDtmp)
+	if err != nil {
+		log.Debugf("host id: %v", hostIDtmp)
+		h.JSONR(c, badstatus, err)
+		return
+	}
+
+	ss, err := hbs.GetHostStrategies(hostID)
+	if err != nil {
+		log.Error(err)
+	}
+	h.JSONR(c, ss)
 	return
 }

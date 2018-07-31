@@ -13,6 +13,7 @@ import (
 	yaag_gin "github.com/masato25/yaag/gin"
 	"github.com/masato25/yaag/yaag"
 	"github.com/open-falcon/falcon-plus/modules/api/app/controller"
+	"github.com/open-falcon/falcon-plus/modules/api/app/services/hbs"
 	"github.com/open-falcon/falcon-plus/modules/api/config"
 	"github.com/open-falcon/falcon-plus/modules/api/graph"
 	"github.com/spf13/viper"
@@ -20,6 +21,9 @@ import (
 
 func initGraph() {
 	graph.Start(viper.GetStringMapString("graphs.cluster"))
+}
+func initHbs() {
+	hbs.Start(viper.GetString("hbs.address"))
 }
 
 func main() {
@@ -71,6 +75,7 @@ func main() {
 		})
 		routes.Use(yaag_gin.Document())
 	}
+	initHbs()
 	initGraph()
 	//start gin server
 	log.Debugf("will start with port:%v", viper.GetString("web_port"))
