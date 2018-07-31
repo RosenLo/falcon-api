@@ -1,5 +1,13 @@
 Changes
 
+## 1.2.0 (2018-07-30)
+
+### Added
+- add a rpc service to get the host strategies 9ca8f2e2
+- add control script d0da000f
+
+### Changed
+- fix typo error 0fe888e5
 
 ## 1.1.0 (2018-07-12)
 
