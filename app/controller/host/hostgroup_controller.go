@@ -3,7 +3,6 @@ package host
 import (
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 
 	log "github.com/Sirupsen/logrus"
@@ -202,7 +201,6 @@ func DeleteHostGroup(c *gin.Context) {
 
 func GetHostGroup(c *gin.Context) {
 	grpIDtmp := c.Params.ByName("host_group")
-	q := c.DefaultQuery("q", ".+")
 	if grpIDtmp == "" {
 		h.JSONR(c, badstatus, "grp id is missing")
 		return
@@ -213,29 +211,11 @@ func GetHostGroup(c *gin.Context) {
 		h.JSONR(c, badstatus, err)
 		return
 	}
-	hostgroup := f.HostGroup{ID: int64(grpID)}
-	if dt := db.Falcon.Find(&hostgroup); dt.Error != nil {
-		h.JSONR(c, expecstatus, dt.Error)
-		return
-	}
+
 	hosts := []f.Host{}
-	grpHosts := []f.GrpHost{}
-	if dt := db.Falcon.Where("grp_id = ?", grpID).Find(&grpHosts); dt.Error != nil {
-		h.JSONR(c, expecstatus, dt.Error)
-		return
-	}
-	for _, grph := range grpHosts {
-		var host f.Host
-		db.Falcon.Find(&host, grph.HostID)
-		if host.ID != 0 {
-			if ok, err := regexp.MatchString(q, host.Hostname); ok == true && err == nil {
-				hosts = append(hosts, host)
-			}
-		}
-	}
+	db.Falcon.Raw("SELECT hostname FROM host as h inner join grp_host as g ON h.id = g.host_id AND g.grp_id = ?", grpID).Find(&hosts)
 	h.JSONR(c, map[string]interface{}{
-		"hostgroup": hostgroup,
-		"hosts":     hosts,
+		"hosts": hosts,
 	})
 	return
 }
