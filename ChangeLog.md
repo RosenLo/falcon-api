@@ -1,5 +1,10 @@
 Changes
 
+## 1.3.0 (2018-08-21)
+
+### Changed
+- improve the query speed of the host group 18c68619
+
 ## 1.2.0 (2018-07-30)
 
 ### Added
