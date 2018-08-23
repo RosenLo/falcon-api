@@ -124,7 +124,7 @@ type APIEventsGetInputs struct {
 	EndTime   int64 `json:"endTime" form:"endTime"`
 	Status    int   `json:"status" form:"status" binding:"gte=-1,lte=1"`
 	//event_caseId
-	EventId string `json:"event_id" form:"event_id" binding:"required"`
+	EventId string `json:"event_id" form:"event_id"`
 	//number of reacord's limit on each page
 	Limit int `json:"limit" form:"limit"`
 	//pagging
