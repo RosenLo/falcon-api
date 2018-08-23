@@ -1,5 +1,10 @@
 Changes
 
+## 1.4.0 (2018-08-23)
+
+### Changed
+- compatible with dcp 0f83d9b6
+
 ## 1.3.0 (2018-08-21)
 
 ### Changed
