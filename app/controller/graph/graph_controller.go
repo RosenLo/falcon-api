@@ -1,3 +1,23 @@
+// Copyright 2018 RosenLo
+
+// Copyright 2017 Xiaomi, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * This code was originally worte by Xiaomi, Inc. modified by RosenLo.
+**/
+
 package graph
 
 import (
@@ -6,6 +26,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"net/http"
+	"reflect"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
@@ -16,14 +39,10 @@ import (
 	"github.com/open-falcon/falcon-plus/modules/api/app/utils"
 	grh "github.com/open-falcon/falcon-plus/modules/api/graph"
 	tcache "github.com/toolkits/cache/localcache/timedcache"
-	"net/http"
-	//"github.com/open-falcon/falcon-plus/modules/api/app/controller/host"
-	"reflect"
-	//"database/sql"
 )
 
 var (
-	localStepCache = tcache.New(600 * time.Second, 60 * time.Second)
+	localStepCache = tcache.New(600*time.Second, 60*time.Second)
 )
 
 type APIEndpointObjGetInputs struct {
@@ -93,7 +112,7 @@ func EndpointRegexpQuery(c *gin.Context) {
 	qs := []string{}
 	if inputs.Q != "" {
 		//解析输入的hostname(再次改动支持ip)
-		qs = strings.Split(inputs.Q, " ")                //输入解析为一个数组
+		qs = strings.Split(inputs.Q, " ") //输入解析为一个数组
 	}
 
 	var offset int = 0
@@ -109,7 +128,7 @@ func EndpointRegexpQuery(c *gin.Context) {
 	if len(labels) != 0 {
 		dt = db.Graph.Table("endpoint_counter").Select("distinct endpoint_id")
 		for _, trem := range labels {
-			dt = dt.Where(" counter like ? ", "%" + strings.TrimSpace(trem) + "%")
+			dt = dt.Where(" counter like ? ", "%"+strings.TrimSpace(trem)+"%")
 		}
 		dt = dt.Limit(inputs.Limit).Offset(offset).Pluck("distinct endpoint_id", &endpoint_id)
 		if dt.Error != nil {
@@ -134,7 +153,6 @@ func EndpointRegexpQuery(c *gin.Context) {
 		log.Println("-------->")
 		log.Println(endpoints)
 		//
-
 
 		dt = db.Graph.Table("endpoint").
 			Select("endpoint, id")
@@ -220,11 +238,11 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 			}
 			if len(qs) > 0 {
 				qslen := len(qs)
-				for _, kk := range qs[:qslen - 1] {
+				for _, kk := range qs[:qslen-1] {
 					it = it.Where(`counter regexp ?`, strings.TrimSpace(kk))
 				}
 
-				mm := strings.TrimSpace(qs[qslen - 1])
+				mm := strings.TrimSpace(qs[qslen-1])
 				it = it.Where(`counter regexp ?)`, strings.TrimSpace(mm))
 			}
 		}
