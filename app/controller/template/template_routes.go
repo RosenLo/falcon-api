@@ -23,9 +23,9 @@ package template
 import (
 	"net/http"
 
+	"github.com/RosenLo/falcon-api/app/utils"
+	"github.com/RosenLo/falcon-api/config"
 	"github.com/gin-gonic/gin"
-	"github.com/open-falcon/falcon-plus/modules/api/app/utils"
-	"github.com/open-falcon/falcon-plus/modules/api/config"
 )
 
 var db config.DBPool

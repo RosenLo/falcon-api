@@ -29,10 +29,10 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
-	"github.com/open-falcon/falcon-plus/modules/api/app/model/uic"
-	"github.com/open-falcon/falcon-plus/modules/api/app/utils"
-	"github.com/open-falcon/falcon-plus/modules/api/config"
+	h "github.com/RosenLo/falcon-api/app/helper"
+	"github.com/RosenLo/falcon-api/app/model/uic"
+	"github.com/RosenLo/falcon-api/app/utils"
+	"github.com/RosenLo/falcon-api/config"
 )
 
 type CTeam struct {

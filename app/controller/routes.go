@@ -17,18 +17,18 @@ package controller
 import (
 	"net/http"
 
+	"github.com/RosenLo/falcon-api/app/controller/alarm"
+	"github.com/RosenLo/falcon-api/app/controller/dashboard_graph"
+	"github.com/RosenLo/falcon-api/app/controller/dashboard_screen"
+	"github.com/RosenLo/falcon-api/app/controller/expression"
+	"github.com/RosenLo/falcon-api/app/controller/graph"
+	"github.com/RosenLo/falcon-api/app/controller/host"
+	"github.com/RosenLo/falcon-api/app/controller/mockcfg"
+	"github.com/RosenLo/falcon-api/app/controller/strategy"
+	"github.com/RosenLo/falcon-api/app/controller/template"
+	"github.com/RosenLo/falcon-api/app/controller/uic"
+	"github.com/RosenLo/falcon-api/app/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/alarm"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/dashboard_graph"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/dashboard_screen"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/expression"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/graph"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/host"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/mockcfg"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/strategy"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/template"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller/uic"
-	"github.com/open-falcon/falcon-plus/modules/api/app/utils"
 )
 
 func StartGin(port string, r *gin.Engine) {

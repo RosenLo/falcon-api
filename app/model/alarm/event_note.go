@@ -17,8 +17,8 @@ package alarm
 import (
 	"time"
 
-	"github.com/open-falcon/falcon-plus/modules/api/app/model/uic"
-	"github.com/open-falcon/falcon-plus/modules/api/config"
+	"github.com/RosenLo/falcon-api/app/model/uic"
+	"github.com/RosenLo/falcon-api/config"
 )
 
 // +--------------+------------------+------+-----+-------------------+-----------------------------+

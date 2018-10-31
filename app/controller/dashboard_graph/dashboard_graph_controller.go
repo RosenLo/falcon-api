@@ -27,10 +27,10 @@ import (
 	"strings"
 	"time"
 
+	h "github.com/RosenLo/falcon-api/app/helper"
+	m "github.com/RosenLo/falcon-api/app/model/dashboard"
 	"github.com/gin-gonic/gin"
 	cutils "github.com/open-falcon/falcon-plus/common/utils"
-	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
-	m "github.com/open-falcon/falcon-plus/modules/api/app/model/dashboard"
 )
 
 type APITmpGraphCreateReqData struct {

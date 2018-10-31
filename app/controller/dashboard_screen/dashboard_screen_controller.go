@@ -24,9 +24,9 @@ import (
 	"fmt"
 	"strconv"
 
+	h "github.com/RosenLo/falcon-api/app/helper"
+	m "github.com/RosenLo/falcon-api/app/model/dashboard"
 	"github.com/gin-gonic/gin"
-	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
-	m "github.com/open-falcon/falcon-plus/modules/api/app/model/dashboard"
 )
 
 func ScreenCreate(c *gin.Context) {

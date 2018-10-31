@@ -25,11 +25,11 @@ import (
 	"net/http"
 	"strconv"
 
+	h "github.com/RosenLo/falcon-api/app/helper"
+	f "github.com/RosenLo/falcon-api/app/model/falcon_portal"
 	log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
-	f "github.com/open-falcon/falcon-plus/modules/api/app/model/falcon_portal"
 )
 
 type APIGetTemplatesOutput struct {

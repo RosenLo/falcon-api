@@ -29,9 +29,9 @@ import (
 
 	"io/ioutil"
 
+	h "github.com/RosenLo/falcon-api/app/helper"
+	f "github.com/RosenLo/falcon-api/app/model/falcon_portal"
 	"github.com/gin-gonic/gin"
-	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
-	f "github.com/open-falcon/falcon-plus/modules/api/app/model/falcon_portal"
 	"github.com/spf13/viper"
 )
 

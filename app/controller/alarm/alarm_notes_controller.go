@@ -20,9 +20,9 @@ import (
 	"strings"
 	"time"
 
+	h "github.com/RosenLo/falcon-api/app/helper"
+	alm "github.com/RosenLo/falcon-api/app/model/alarm"
 	"github.com/gin-gonic/gin"
-	h "github.com/open-falcon/falcon-plus/modules/api/app/helper"
-	alm "github.com/open-falcon/falcon-plus/modules/api/app/model/alarm"
 )
 
 type APIGetNotesOfAlarmInputs struct {

@@ -19,7 +19,7 @@ import (
 	"testing"
 
 	cmodel "github.com/open-falcon/falcon-plus/common/model"
-	"github.com/open-falcon/falcon-plus/modules/api/config"
+	"github.com/RosenLo/falcon-api/config"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/spf13/viper"
 )

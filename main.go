@@ -28,14 +28,14 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/RosenLo/falcon-api/app/controller"
+	"github.com/RosenLo/falcon-api/app/services/hbs"
+	"github.com/RosenLo/falcon-api/config"
+	"github.com/RosenLo/falcon-api/graph"
 	log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	yaag_gin "github.com/masato25/yaag/gin"
 	"github.com/masato25/yaag/yaag"
-	"github.com/open-falcon/falcon-plus/modules/api/app/controller"
-	"github.com/open-falcon/falcon-plus/modules/api/app/services/hbs"
-	"github.com/open-falcon/falcon-plus/modules/api/config"
-	"github.com/open-falcon/falcon-plus/modules/api/graph"
 	"github.com/spf13/viper"
 )
 

@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/open-falcon/falcon-plus/modules/api/app/utils"
+	"github.com/RosenLo/falcon-api/app/utils"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/spf13/viper"
 )
