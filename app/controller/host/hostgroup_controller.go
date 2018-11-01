@@ -233,7 +233,7 @@ func GetHostGroup(c *gin.Context) {
 	}
 
 	hosts := []f.Host{}
-	db.Falcon.Raw("SELECT hostname FROM host as h inner join grp_host as g ON h.id = g.host_id AND g.grp_id = ?", grpID).Find(&hosts)
+	db.Falcon.Raw("SELECT hostname, ip FROM host as h inner join grp_host as g ON g.grp_id = ? AND h.id = g.host_id", grpID).Find(&hosts)
 	h.JSONR(c, map[string]interface{}{
 		"hosts": hosts,
 	})
