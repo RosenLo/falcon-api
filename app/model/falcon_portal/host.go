@@ -1,3 +1,5 @@
+// Copyright 2018 RosenLo
+
 // Copyright 2017 Xiaomi, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,6 +14,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/**
+ * This code was originally worte by Xiaomi, Inc. modified by RosenLo.
+**/
+
 package falcon_portal
 
 import (
@@ -25,8 +31,8 @@ import (
 // | Field          | Type             | Null | Key | Default           | Extra                       |
 // +----------------+------------------+------+-----+-------------------+-----------------------------+
 // | id             | int(11)          | NO   | PRI | NULL              | auto_increment              |
-// | hostname       | varchar(255)     | NO   | UNI |                   |                             |
-// | ip             | varchar(16)      | NO   |     |                   |                             |
+// | hostname       | varchar(255)     | NO   |     |                   |                             |
+// | ip             | varchar(16)      | NO   | UNI |                   |                             |
 // | agent_version  | varchar(16)      | NO   |     |                   |                             |
 // | plugin_version | varchar(128)     | NO   |     |                   |                             |
 // | maintain_begin | int(10) unsigned | NO   |     | 0                 |                             |
@@ -51,6 +57,16 @@ func (this Host) TableName() string {
 func (this Host) Existing() (int64, bool) {
 	db := con.Con()
 	db.Falcon.Table(this.TableName()).Where("hostname = ?", this.Hostname).Scan(&this)
+	if this.ID != 0 {
+		return this.ID, true
+	} else {
+		return 0, false
+	}
+}
+
+func (this Host) IpExisting() (int64, bool) {
+	db := con.Con()
+	db.Falcon.Table(this.TableName()).Where("ip = ?", this.Ip).Scan(&this)
 	if this.ID != 0 {
 		return this.ID, true
 	} else {

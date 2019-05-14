@@ -164,7 +164,7 @@ func GetHost(c *gin.Context) {
 		}
 	}
 	if hostName != "" {
-		if dt := db.Falcon.Where("hostname = ?", hostName).Find(&hosts); dt.Error != nil {
+		if dt := db.Falcon.Where("hostname like ?", fmt.Sprintf("%s%%", hostName)).Find(&hosts); dt.Error != nil {
 			h.JSONR(c, expecstatus, dt.Error)
 			return
 		}
