@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	h "github.com/RosenLo/falcon-api/app/helper"
+	f "github.com/RosenLo/falcon-api/app/model/falcon_portal"
 	m "github.com/RosenLo/falcon-api/app/model/graph"
 	u "github.com/RosenLo/falcon-api/app/utils"
 	log "github.com/Sirupsen/logrus"
@@ -65,6 +66,36 @@ func responseHostsRegexp(limit int, regexpKey string) (result []APIGrafanaMainQu
 		result = append(result, APIGrafanaMainQueryOutputs{
 			Expandable: true,
 			Text:       h.Endpoint,
+		})
+	}
+	return
+}
+
+//for find host list from hostgroup & grafana template searching, regexp support
+func responseHostsRegexpFromHostGroup(limit int, regexpKey string) (result []APIGrafanaMainQueryOutputs) {
+	var sql string
+	result = []APIGrafanaMainQueryOutputs{}
+	//for get right table name
+	hosts := []f.Host{}
+	params := strings.Split(regexpKey, ",")
+	if len(params) != 0 {
+		for _, content := range params {
+			query := strings.Split(content, "=")
+			if len(query) > 1 && query[0] == "group" {
+				grpName := query[1]
+				sql = fmt.Sprintf("select * from host as a inner join grp_host as c on a.id = c.host_id inner join grp as b on b.grp_name = '%s' and b.id = c.grp_id", grpName)
+			} else if len(query) == 1 {
+				sql = fmt.Sprintf("select * from host where hostname regexp '%s'", query[0])
+			}
+		}
+	}
+
+	hostHelp := f.Host{}
+	db.Falcon.Table(hostHelp.TableName()).Raw(sql).Limit(limit).Scan(&hosts)
+	for _, h := range hosts {
+		result = append(result, APIGrafanaMainQueryOutputs{
+			Expandable: true,
+			Text:       h.Hostname,
 		})
 	}
 	return
@@ -218,7 +249,8 @@ func GrafanaMainQuery(c *gin.Context) {
 	if inputs.Query == "!N!" {
 		output = repsonseDefault(inputs.Limit)
 	} else if !strings.Contains(inputs.Query, "#") {
-		output = responseHostsRegexp(inputs.Limit, inputs.Query)
+		// output = responseHostsRegexp(inputs.Limit, inputs.Query)
+		output = responseHostsRegexpFromHostGroup(inputs.Limit, inputs.Query)
 	} else if strings.Contains(inputs.Query, "#") && !strings.Contains(inputs.Query, "#select metric") {
 		output = responseCounterRegexp(inputs.Query)
 	}
@@ -245,6 +277,7 @@ func GrafanaRender(c *gin.Context) {
 		h.JSONR(c, badstatus, err.Error())
 		return
 	}
+	log.Debug(inputs)
 	respList := []*cmodel.GraphQueryResponse{}
 	for _, target := range inputs.Target {
 		hosts, counter := cutEndpointCounterHelp(target)
