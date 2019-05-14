@@ -222,46 +222,29 @@ func EndpointCounterRegexpQuery(c *gin.Context) {
 		}
 
 		var counters []m.EndpointCounter
+		var endpointIDS []m.Endpoint
 		countersResp := []interface{}{}
 
 		//lee
 		//ip先转换为endpoint表中的hostname再查找
-		it := db.Graph.Raw(fmt.Sprintf("select endpoint_id,counter,step,type from endpoint_counter Where endpoint_id IN (select id from endpoint where endpoint in (select hostname from falcon_portal.host where id in %s )", eids))
+		it := db.Graph.Raw(fmt.Sprintf("select id from endpoint where endpoint in (select hostname from falcon_portal.host where id in %s )", eids))
 
-		if metricQuery != "" {
-			qs := strings.Split(metricQuery, " ")
-			log.Println(len(qs))
-			if len(qs) == 0 {
-				for _, kk := range qs {
-					it = it.Where(`counter regexp ?)`, strings.TrimSpace(kk))
-				}
-			}
-			if len(qs) > 0 {
-				qslen := len(qs)
-				for _, kk := range qs[:qslen-1] {
-					it = it.Where(`counter regexp ?`, strings.TrimSpace(kk))
-				}
-
-				mm := strings.TrimSpace(qs[qslen-1])
-				it = it.Where(`counter regexp ?)`, strings.TrimSpace(mm))
-			}
-		}
-		it = it.Limit(limit).Offset(offset).Scan(&counters)
+		it = it.Limit(limit).Offset(offset).Scan(&endpointIDS)
 		if it.Error != nil {
 			h.JSONR(c, http.StatusBadRequest, it.Error)
 		}
-		for _, x := range counters {
-			countersResp = append(countersResp, map[string]interface{}{
-				"endpoint_id": x.EndpointID,
-				"counter":     x.Counter,
-				"step":        x.Step,
-				"type":        x.Type,
-			})
-		}
-		//lee
 
 		//先按照endpoint_id查找counters,如果没有则先找到ip对应的endpoint_id再查找
+
+		if len(endpointIDS) != 0 {
+			_eids := []string{}
+			for _, e := range endpointIDS {
+				_eids = append(_eids, strconv.Itoa(int(e.ID)))
+			}
+			eids = fmt.Sprintf("(%s)", strings.Join(_eids, ","))
+		}
 		dt := db.Graph.Table("endpoint_counter").Select("endpoint_id, counter, step, type").Where(fmt.Sprintf("endpoint_id IN %s", eids))
+
 		if metricQuery != "" {
 			qs := strings.Split(metricQuery, " ")
 			if len(qs) > 0 {
