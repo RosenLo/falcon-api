@@ -26,13 +26,13 @@ import (
 	"net/http"
 	"strconv"
 
-	log "github.com/Sirupsen/logrus"
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	h "github.com/RosenLo/falcon-api/app/helper"
 	"github.com/RosenLo/falcon-api/app/model/uic"
 	"github.com/RosenLo/falcon-api/app/utils"
 	"github.com/RosenLo/falcon-api/config"
+	log "github.com/Sirupsen/logrus"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 type CTeam struct {

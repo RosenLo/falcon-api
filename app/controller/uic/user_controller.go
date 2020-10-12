@@ -27,12 +27,12 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	h "github.com/RosenLo/falcon-api/app/helper"
 	"github.com/RosenLo/falcon-api/app/model/uic"
 	"github.com/RosenLo/falcon-api/app/utils"
+	log "github.com/Sirupsen/logrus"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 )
 

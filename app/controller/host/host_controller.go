@@ -23,6 +23,7 @@ package host
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	h "github.com/RosenLo/falcon-api/app/helper"
 	f "github.com/RosenLo/falcon-api/app/model/falcon_portal"
@@ -164,7 +165,8 @@ func GetHost(c *gin.Context) {
 		}
 	}
 	if hostName != "" {
-		if dt := db.Falcon.Where("hostname like ?", fmt.Sprintf("%s%%", hostName)).Find(&hosts); dt.Error != nil {
+		hostName = strings.Replace(hostName, "*", "%", -1)
+		if dt := db.Falcon.Where("hostname like ?", fmt.Sprintf("%s", hostName)).Find(&hosts); dt.Error != nil {
 			h.JSONR(c, expecstatus, dt.Error)
 			return
 		}

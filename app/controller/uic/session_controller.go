@@ -18,11 +18,11 @@ import (
 	"net/http"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
-	"github.com/gin-gonic/gin"
 	h "github.com/RosenLo/falcon-api/app/helper"
 	"github.com/RosenLo/falcon-api/app/model/uic"
 	"github.com/RosenLo/falcon-api/app/utils"
+	log "github.com/Sirupsen/logrus"
+	"github.com/gin-gonic/gin"
 )
 
 type APILoginInput struct {
